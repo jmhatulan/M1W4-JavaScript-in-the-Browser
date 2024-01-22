@@ -32,19 +32,11 @@
 <!-- Resource: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#inline_event_handlers_%E2%80%94_dont_use_these
             - See other event listener mechanisms section -->
 
-<button onclick="(() => console.log('From inline event handler'))()">Call inline event handler</button>
-
-<script>
-    
-    function callEventHandler() {
-        console.log("From inline event handler")
-    }
-
-</script>
+<button onclick="console.log('From inline event handler')">Call inline event handler</button>
     
 <!-- Todo 3.3a Create a button with the text "Call addEventListener" -->
 
-<button>Call addEventListener</button>
+<button id="addEventListenerButton">Call addEventListener</button>
 
 <!-- Todo 3.4a Create a form that accepts the first name and last name of the user -->
 
@@ -58,8 +50,10 @@
     const results = {}
     const firstNameInput = document.getElementById("firstName")
     const lastNameInput = document.getElementById("lastName")
+
     // Todo 3.4b When the user presses the submit form button, append the contents of the form to results. Then, display the content of results
     // Relevant Link: https://stackoverflow.com/questions/11563638/how-do-i-get-the-value-of-text-input-field-using-javascript
+
     document.getElementById("submit-btn").addEventListener("click", (e) => {
         e.preventDefault() // prevents the page from being refreshed
         // additional validation
@@ -89,9 +83,9 @@
         // Todo 3.1 When the page has loaded, log "The page has loaded"
         // Resource: https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
 
-        window.onload = (event) => {
+        window.addEventListener("load",(event) => {
             console.log("The page has loaded");
-        };
+        });
 
         // ----------------------------------------
 
@@ -100,39 +94,50 @@
         // Resource: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#using_addeventlistener
         //          - See Using addEventListener() section
 
-        const button3 = document.querySelector("button:nth-of-type(2)");
-
-        button3.addEventListener("click", () => {
-            console.log("From addEventListener")
-        });
+        const buttonAddEvent = document.querySelector("#addEventListenerButton");
+        buttonAddEvent.addEventListener("click", () => { console.log("From addEventListener") });
 
         // ----------------------------------------
 
         // Checkpoint 3.1 What is the difference between inline event handlers and addEventListener? When should you use one over the other?
         // Answer: 
 
-        // 
+        /*
+            Inline allows you to directly handle only single command events inside the HTML file only, 
+            while addEventListener allows for multiple commands and can be separated by using a JS file.
+
+            Generally, Inline Event Handlers are used for quick testing of the code or if they are used sparingly. 
+            Meanwhile, addEventListener are the standard and is preferrably used due to its flexibly with multiple codes and better organization. 
+            It is less prone to errors and easier to detect. 
+        */
 
         // ----------------------------------------
         
         // Todo 3.5 add event listenders for the grandparent, parent, and child divs. 
         //          When clicked, the grandparent, parent, and child should log "Grandparent", "Parent", and "Child" respectively
         // Resource: https://youtu.be/XF1_MlZ5l6M?si=QrNjKXg-xXV6yghW @ 4:00 of the video
+
         const grandparent = document.querySelector(".grandparent")
         const parent = document.querySelector(".parent")
         const child = document.querySelector(".child")
 
-        grandparent.addEventListener("click", () => {
+        grandparent.addEventListener("click", (e) => {
             console.log("Grandparent");
         });
 
         parent.addEventListener("click", (e) => {
-            e.stopPropagation(); // prevents event from reaching grandparent
+            // e.stopPropagation(); 
+
+            // ^- uncomment both to limit the log shown to be only the clicked one \/
+
             console.log("Parent");
         });
 
         child.addEventListener("click", (e) => {
-            e.stopPropagation(); // prevents event from reaching parent and grandparent
+            // e.stopPropagation();
+
+            // ^- uncomment both to limit the log shown to be only the clicked one /\
+
             console.log("Child");
         });
 
@@ -141,13 +146,47 @@
         // Checkpoint 3.2 What is event bubbling? How was it shown in Todo 3.5?
         // Answer: 
 
+        /*
+            Event Bubbling is one half of how events work in JavaScript. 
+            The click event will trigger the innermost target element and then proceeds 
+            to trigger the elements that surrounds it or their parent until it sucessfully runs all.
+
+            It is demonstrated in Todo 3.5 by clicking on the Child event. 
+            This will bubble it's way up to the Parent and Grandparent event 
+            and cause to trigger their event handlers as well. 
+            In my code, it prevented to event bubble by utilizing propagation via "e.stopPropagation". 
+        */
+
         // ----------------------------------------
         
         // Bonus Todo 3.6 Change your code in the previous todo such that "grandparent" is displayed first
 
+        grandparent.addEventListener(
+            "click",
+            (e) => {
+                console.log("Grandparent");
+            },
+            {capture: true}
+        )
+
         // ----------------------------------------
 
         // Bonus Todo 3.7 Change your code in the previous todo such that "parent" is never displayed
+
+        /*
+            parent.addEventListener("click", (e) => {
+
+                console.log("Parent");
+            });
+
+            child.addEventListener("click", (e) => {
+                e.stopPropagation();
+
+                console.log("Child");
+            });
+        */
+
+        // this code makes it so that when Child is clicked. the parent is not displayed.
 
         // ----------------------------------------
 
