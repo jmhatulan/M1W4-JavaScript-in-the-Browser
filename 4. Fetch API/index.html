@@ -17,18 +17,143 @@
             // Checkpoint 4.1 What are HTTP requests and reponses? What are the various HTTP verbs and what do they do?
             // Answer: 
 
-            // Todo 4.1 Fetch the list of users. Outout the first and second page of users.
+            /*
 
+                An HTTP request is a message that is sent by the client to the server, which aims to request access on the resources of a server.
+                An HTTP response is response by the server to the client, which aims to provide the client the resources it has requested. It can be a successful reponse or a failed response.
+
+                There are numerous HTTP verbs such as:
+                
+                GET
+                - Requests data retrival from the specified resource.
+                HEAD
+                - Does the same as GET with the exception of without a response from the body.
+                POST
+                - Submits a new entity to the specified resource
+                PUT
+                - Overwrites all details about the target resource
+                DELETE
+                - Deletes the specified resource
+                PATCH
+                - Applies partial updates to a resource
+
+            */
+
+            // Todo 4.1 Fetch the list of users. Output the first and second page of users.
+
+            const apiPageUrl = "https://reqres.in/api/users?page="
+
+            function fetchPageData(page) {
+                return fetch(apiPageUrl+page)
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json(); // Convert response to JSON and return the result
+                        } else {
+                            console.log('Not Successful');
+                        }
+                    })
+                    .catch(error => console.error('ERROR'));   
+                }
+            
+            fetchPageData(1)
+                .then(data => console.log(data))
+            fetchPageData(2)
+                .then(data => console.log(data))
+                            
             // Todo 4.2 Fetch the information about a single user. Display their information
+
+            const apiUserUrl = "https://reqres.in/api/users/1"
+
+            fetch(apiUserUrl)
+                .then(res => {
+                    if (res.ok) {
+                        return res.json(); // Convert response to JSON and return the result
+                    } else {
+                        console.log('Not Successful');
+                    }
+                })
+                .then(data => console.log(data))
+                .catch(error => console.error('ERROR'));
 
             // Todo 4.3 Create a user
 
+            const customID = 999;
+
+            fetch('https://reqres.in/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    avatar: 'https://reqres.in/img/faces/999-image.jpg',
+                    email: 'hanabisparkle@reqres.in',
+                    first_name: 'Reina',
+                    last_name: 'Ueda',
+                    id: customID // I set a custom id for this one for consistent practice simulation
+                })
+            })
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('ERROR'));
+
             // Todo 4.4 Update the information of the user that you have created
+
+            const udpatedData = {
+                email: 'reinaueda@reqres.in',
+                first_name: 'Sparkle',
+                last_name: 'Hanabi'
+            }
+
+            fetch('https://reqres.in/api/users/${customID}', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(udpatedData)
+            })
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('ERROR'));
+
 
             // Todo 4.5 Delete the user that you have created
 
+            fetch(`https://reqres.in/api/users/${customID}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('User deleted successfully');
+                    } else {
+                        console.log('Failed to delete user');
+                    }
+                })
+                .catch(error => console.error('ERROR'));
+
             // Checkpoint 4.2 What is the difference between callbacks, then-catch vs await-try-catch? When should you use one over the other
             // Answer: 
+
+            /*
+            
+                Callbacks: 
+                - Passed as arguments to another function.
+                - Runs after the completion of an asynchronous operation.
+
+                + Used for simple case statements
+
+                Then-Catch:
+                - Promises provides a cleaner asynchronous code using operations.
+                - Runs then if promise of the code is successful and runs catch if a part of the code is an error 
+
+                + When you want to separate the success and error handling code distinct.
+
+                Await-Try-Catch:
+                - Mimics sychronous style using asynchronous code and functions.
+                - Trys to run the entire code and checks for errors. 
+
+                + When you want a more structured and synchronous-looking error-handling approach.
+
+            */
         }
         start()
 
